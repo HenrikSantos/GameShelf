@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="flex justify-between py-5 bg-zinc-900 items-center align-middle lg:px-32 xl:px-[32rem]"
+    class="flex justify-between py-5 bg-zinc-900 items-center align-middle lg:px-32 xl:px-[25rem]"
   >
     <div class="flex gap-2 items-center">
       <img src="../assets/brand.png" alt="brand" class="w-12" />
