@@ -1,3 +1,5 @@
+<script setup lang="ts"></script>
+
 <template>
   <div class="welcome lg:px-32 xl:px-[25rem]">
     <div class="image-container">
@@ -9,12 +11,6 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'Welcome',
-}
-</script>
 
 <style scoped>
 .welcome {
