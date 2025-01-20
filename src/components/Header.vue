@@ -10,10 +10,47 @@
       >
     </div>
 
-    <div class="flex gap-5 uppercase text-sm font-bold">
-      <RouterLink to="/signin" class="hover:text-white">Sign In</RouterLink>
-      <RouterLink to="/register" class="hover:text-white">Create Account</RouterLink>
+    <div class="flex gap-5 uppercase text-sm font-bold align-middle items-center">
+      <div v-if="user" class="flex items-center gap-3">
+        <RouterLink to="/user" class="hover:text-white">{{ user.name }}</RouterLink>
+        <button @click="logout" class="text-sm font-bold hover:text-red-500">LOGOUT</button>
+      </div>
+      <Login v-else @user-logged-in="handleUserLoggedIn" />
       <RouterLink to="/games" class="hover:text-white">Games</RouterLink>
     </div>
   </nav>
 </template>
+
+<script>
+import Login from './Login.vue'
+
+export default {
+  components: {
+    Login,
+  },
+  data() {
+    return {
+      user: null,
+    }
+  },
+  created() {
+    this.checkUserLogin()
+  },
+  methods: {
+    checkUserLogin() {
+      const userData = localStorage.getItem('user')
+      if (userData) {
+        this.user = JSON.parse(userData)
+      }
+    },
+    handleUserLoggedIn(userData) {
+      this.user = userData
+    },
+    logout() {
+      localStorage.removeItem('user')
+      this.user = null
+      this.$router.push('/')
+    },
+  },
+}
+</script>
