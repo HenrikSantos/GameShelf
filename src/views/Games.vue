@@ -39,7 +39,10 @@ onMounted(async () => {
         />
         <div>
           <h1 class="text-white">
-            <span class="font-bold">{{ game.name }}</span>
+            <RouterLink :to="`/games/${game.id}`" class="hover:text-white"
+              ><span class="font-bold">{{ game.name }}</span></RouterLink
+            >
+            <span class="font-thin text-gray-400">({{ game.rating }})</span>
             {{}}
             <span class="font-thin text-gray-400">{{ game.released.slice(0, 4) }}</span>
           </h1>
