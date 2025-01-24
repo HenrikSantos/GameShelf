@@ -30,7 +30,9 @@ onMounted(async () => {
 <template>
   <div class="grid grid-cols-5 lg:px-32 xl:px-[25rem] gap-3 justify-between mt-5">
     <div v-if="!loading" v-for="game in games" :key="game.id" class="overflow-hidden">
-      <img :src="game.background_image" :alt="game.name" class="rounded shadow-2xl max-h-38" />
+      <RouterLink :to="`/games/${game.id}`" class="hover:text-white">
+        <img :src="game.background_image" :alt="game.name" class="rounded shadow-2xl max-h-38" />
+      </RouterLink>
     </div>
   </div>
 </template>
