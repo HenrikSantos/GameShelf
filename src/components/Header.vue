@@ -11,46 +11,38 @@
     </div>
 
     <div class="flex gap-5 uppercase text-sm font-bold align-middle items-center">
-      <div v-if="user" class="flex items-center gap-3">
-        <RouterLink to="/user" class="hover:text-white">{{ user.name }}</RouterLink>
-        <button @click="logout" class="text-sm font-bold hover:text-red-500">LOGOUT</button>
+      <div v-if="userStore.isLoggedIn" class="flex items-center gap-3">
+        <RouterLink to="/user" class="hover:text-white">{{
+          userStore.user?.displayName
+        }}</RouterLink>
+        <button @click="logout" class="text-sm font-bold hover:text-red-500">LOG OUT</button>
       </div>
-      <Login v-else @user-logged-in="handleUserLoggedIn" />
+      <Login v-else />
       <RouterLink to="/games" class="hover:text-white">Games</RouterLink>
     </div>
   </nav>
 </template>
 
 <script>
+import { defineComponent } from 'vue'
+import { useUserStore } from '../stores/userStore'
 import Login from './Login.vue'
 
-export default {
+export default defineComponent({
   components: {
     Login,
   },
-  data() {
+  setup() {
+    const userStore = useUserStore()
+
+    const logout = async () => {
+      await userStore.signOut()
+    }
+
     return {
-      user: null,
+      userStore,
+      logout,
     }
   },
-  created() {
-    this.checkUserLogin()
-  },
-  methods: {
-    checkUserLogin() {
-      const userData = localStorage.getItem('user')
-      if (userData) {
-        this.user = JSON.parse(userData)
-      }
-    },
-    handleUserLoggedIn(userData) {
-      this.user = userData
-    },
-    logout() {
-      localStorage.removeItem('user')
-      this.user = null
-      this.$router.push('/')
-    },
-  },
-}
+})
 </script>

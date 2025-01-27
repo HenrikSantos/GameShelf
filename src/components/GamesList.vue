@@ -16,7 +16,7 @@ const loading = ref(true)
 onMounted(async () => {
   try {
     const response = await axios.get(
-      `https://api.rawg.io/api/games?key=${import.meta.env.VITE_API_KEY}`,
+      `https://api.rawg.io/api/games?key=${import.meta.env.VITE_RAWG_API_KEY}`,
     )
     games.value = response.data.results.slice(0, 5)
   } catch (error) {

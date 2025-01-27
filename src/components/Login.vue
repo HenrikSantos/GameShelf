@@ -1,46 +1,54 @@
 <template>
   <div>
-    <button v-if="!showGoogleLogin" @click="toggleLogin" class="text-sm font-bold hover:text-white">
-      LOGIN
+    <button
+      v-if="!userStore.isLoggedIn"
+      @click="signInWithGoogle"
+      class="text-sm font-bold hover:text-white"
+    >
+      LOGIN WITH GOOGLE
     </button>
-    <GoogleLogin v-else :callback="callback" />
+    <div v-else class="flex gap-3 items-center">
+      <p>{{ userStore.user?.displayName }}!</p>
+      <button @click="signOut" class="text-sm font-bold hover:text-white">LOGOUT</button>
+    </div>
   </div>
 </template>
 
-<script>
-import { jwtDecode } from 'jwt-decode'
+<script lang="ts">
+import { defineComponent } from 'vue'
+import { auth, googleProvider } from '../firebase'
+import { signInWithPopup } from 'firebase/auth'
+import { useUserStore } from '../stores/userStore'
 
-export default {
-  data() {
+export default defineComponent({
+  name: 'GoogleLogin',
+  setup() {
+    const userStore = useUserStore()
+
+    const signInWithGoogle = async () => {
+      try {
+        const result = await signInWithPopup(auth, googleProvider)
+        userStore.setUser({
+          uid: result.user.uid,
+          displayName: result.user.displayName,
+          email: result.user.email,
+          photoURL: result.user.photoURL,
+        })
+        console.log('Google Sign-In successful:', result.user)
+      } catch (error) {
+        console.error('Error signing in with Google:', error)
+      }
+    }
+
+    const signOut = async () => {
+      await userStore.signOut()
+    }
+
     return {
-      showGoogleLogin: false,
+      userStore,
+      signInWithGoogle,
+      signOut,
     }
   },
-  methods: {
-    callback(response) {
-      console.log('Resposta do Google:', response)
-
-      if (response && response.credential) {
-        const decodedToken = jwtDecode(response.credential)
-        console.log('Token decodificado:', decodedToken)
-
-        const userData = {
-          name: decodedToken.name,
-          firstName: decodedToken.given_name,
-          email: decodedToken.email,
-          profilePicture: decodedToken.picture,
-        }
-
-        localStorage.setItem('user', JSON.stringify(userData))
-        this.$emit('user-logged-in', userData)
-        this.$router.push('/')
-      } else {
-        console.error('Resposta do Google inválida:', response)
-      }
-    },
-    toggleLogin() {
-      this.showGoogleLogin = !this.showGoogleLogin
-    },
-  },
-}
+})
 </script>

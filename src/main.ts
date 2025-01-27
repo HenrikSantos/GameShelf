@@ -1,22 +1,17 @@
 import './assets/style.css'
-
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import GoogleSignInPlugin from 'vue3-google-login'
+import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 const app = createApp(App)
 
-const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
-
-if (!clientId) {
-  console.error('Google Client ID não configurado corretamente.')
-}
-
-app.use(GoogleSignInPlugin, {
-  clientId,
-})
-
 app.use(router)
+
+const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
+
+app.use(pinia)
 
 app.mount('#app')
